@@ -1,0 +1,71 @@
+import pygame
+import random
+
+# Initialize Pygame
+pygame.init()
+
+# Define colors
+white = (255, 255, 255)
+black = (0, 0, 0)
+
+# Display dimensions
+dis_width = 800
+dis_height = 600
+
+# Create the display
+dis = pygame.display.set_mode((dis_width, dis_height))
+pygame.display.set_caption('Simple Card Game')
+
+# Load card images
+def load_card_images():
+    suits = ['hearts', 'diamonds', 'clubs', 'spades']
+    values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+    images = {}
+    for suit in suits:
+        for value in values:
+            image = pygame.image.load(f'cards/{value}_of_{suit}.png')  # Load card image
+            images[f'{value}_{suit}'] = pygame.transform.scale(image, (100, 140))
+    return images
+
+# Create a deck of cards
+def create_deck():
+    suits = ['hearts', 'diamonds', 'clubs', 'spades']
+    values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+    deck = [f'{value}_{suit}' for suit in suits for value in values]
+    random.shuffle(deck)
+    return deck
+
+# Display a card on the screen
+def display_card(card, x, y):
+    if card in card_images:
+        dis.blit(card_images[card], (x, y))
+
+# Main game loop
+def game_loop():
+    deck = create_deck()
+    clock = pygame.time.Clock()
+    card_x, card_y = dis_width // 2 - 50, dis_height // 2 - 70
+    game_running = True
+    
+    while game_running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_running = False
+        
+        # Clear screen
+        dis.fill(white)
+        
+        # Display the top card from the deck
+        if deck:
+            display_card(deck[0], card_x, card_y)
+        
+        pygame.display.update()
+        clock.tick(30)  # Frame rate
+
+    pygame.quit()
+
+# Load card images
+card_images = load_card_images()
+
+# Start the game
+game_loop()
